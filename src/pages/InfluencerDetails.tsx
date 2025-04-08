@@ -7,7 +7,8 @@ import PredictionItem from '@/components/PredictionItem';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Influencer, Prediction } from '@/types';
-import { getDummyInfluencers, getDummyPredictions, calculateAccuracy } from '@/lib/utils';
+import { getInfluencerById, getPredictionsByInfluencerId } from '@/services/influencerService';
+import { toast } from '@/hooks/use-toast';
 
 const InfluencerDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,15 +27,30 @@ const InfluencerDetails = () => {
     
     if (!id) return;
     
-    // In a real app, this would fetch from Supabase
-    const allInfluencers = getDummyInfluencers();
-    const foundInfluencer = allInfluencers.find(inf => inf.id === id) || null;
-    setInfluencer(foundInfluencer);
+    // Fetch data from Supabase
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const influencerData = await getInfluencerById(id);
+        setInfluencer(influencerData);
+        
+        if (influencerData) {
+          const predictionsData = await getPredictionsByInfluencerId(id);
+          setPredictions(predictionsData);
+        }
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to load influencer data. Please try again later.',
+          variant: 'destructive',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
     
-    const predictionData = getDummyPredictions(id);
-    setPredictions(predictionData);
-    
-    setLoading(false);
+    fetchData();
   }, [id]);
 
   const toggleTheme = () => {
@@ -54,7 +70,7 @@ const InfluencerDetails = () => {
         <Header toggleTheme={toggleTheme} showThemeToggle={true} />
         <main className="container flex-1 px-4 py-12 md:px-6">
           <div className="flex items-center justify-center">
-            <p>Loading...</p>
+            <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-primary"></div>
           </div>
         </main>
         <Footer />
@@ -78,8 +94,6 @@ const InfluencerDetails = () => {
       </div>
     );
   }
-
-  const accuracy = influencer.accuracy ?? calculateAccuracy(influencer.winCount, influencer.lossCount);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -112,7 +126,7 @@ const InfluencerDetails = () => {
                     <div className="flex items-center gap-4">
                       <div className="text-center">
                         <p className="text-sm text-muted-foreground">Accuracy</p>
-                        <p className="text-2xl font-bold">{accuracy}%</p>
+                        <p className="text-2xl font-bold">{influencer.accuracy ?? 0}%</p>
                       </div>
                       <div className="text-center">
                         <p className="text-sm text-muted-foreground">Record</p>

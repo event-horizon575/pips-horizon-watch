@@ -9,7 +9,92 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      influencers: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          id: string
+          loss_count: number
+          name: string
+          social_media_url: string
+          updated_at: string
+          win_count: number
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          loss_count?: number
+          name: string
+          social_media_url: string
+          updated_at?: string
+          win_count?: number
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          loss_count?: number
+          name?: string
+          social_media_url?: string
+          updated_at?: string
+          win_count?: number
+        }
+        Relationships: []
+      }
+      predictions: {
+        Row: {
+          actual_direction: string | null
+          created_at: string
+          direction: string
+          event_date: string
+          event_type: string
+          id: string
+          influencer_id: string
+          notes: string | null
+          pair: string
+          post_url: string | null
+          result: string | null
+          updated_at: string
+        }
+        Insert: {
+          actual_direction?: string | null
+          created_at?: string
+          direction: string
+          event_date: string
+          event_type: string
+          id?: string
+          influencer_id: string
+          notes?: string | null
+          pair: string
+          post_url?: string | null
+          result?: string | null
+          updated_at?: string
+        }
+        Update: {
+          actual_direction?: string | null
+          created_at?: string
+          direction?: string
+          event_date?: string
+          event_type?: string
+          id?: string
+          influencer_id?: string
+          notes?: string | null
+          pair?: string
+          post_url?: string | null
+          result?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "predictions_influencer_id_fkey"
+            columns: ["influencer_id"]
+            isOneToOne: false
+            referencedRelation: "influencers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

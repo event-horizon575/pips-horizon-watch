@@ -3,26 +3,44 @@ import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import InfluencerCard from '@/components/InfluencerCard';
-import { getDummyInfluencers } from '@/lib/utils';
 import { Influencer } from '@/types';
 import { Button } from '@/components/ui/button';
+import { getInfluencers } from '@/services/influencerService';
+import { toast } from '@/hooks/use-toast';
 
 const Index = () => {
   const [influencers, setInfluencers] = useState<Influencer[]>([]);
   const [sortByAccuracy, setSortByAccuracy] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // In a real app, this would fetch from Supabase
-    const data = getDummyInfluencers();
-    setInfluencers(data);
-    
     // Check for saved theme preference
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'light') {
       document.documentElement.classList.add('light');
       setIsDarkMode(false);
     }
+    
+    // Fetch influencers from Supabase
+    const fetchInfluencers = async () => {
+      try {
+        setLoading(true);
+        const data = await getInfluencers();
+        setInfluencers(data);
+      } catch (error) {
+        console.error('Failed to fetch influencers:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to load influencers. Please try again later.',
+          variant: 'destructive',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchInfluencers();
   }, []);
 
   const toggleTheme = () => {
@@ -48,8 +66,8 @@ const Index = () => {
       });
       setInfluencers(sorted);
     } else {
-      const data = getDummyInfluencers();
-      setInfluencers(data);
+      // Re-fetch to reset order
+      getInfluencers().then(data => setInfluencers(data));
     }
   };
 
@@ -88,11 +106,23 @@ const Index = () => {
                 </Button>
               </div>
               
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {influencers.map((influencer) => (
-                  <InfluencerCard key={influencer.id} influencer={influencer} />
-                ))}
-              </div>
+              {loading ? (
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div key={i} className="h-48 rounded-lg bg-muted animate-pulse"></div>
+                  ))}
+                </div>
+              ) : influencers.length > 0 ? (
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {influencers.map((influencer) => (
+                    <InfluencerCard key={influencer.id} influencer={influencer} />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex h-48 items-center justify-center rounded-lg border border-dashed">
+                  <p className="text-muted-foreground">No influencers found</p>
+                </div>
+              )}
             </div>
           </div>
         </section>
