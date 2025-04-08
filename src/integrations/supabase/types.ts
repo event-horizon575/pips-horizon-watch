@@ -13,30 +13,36 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string
+          description: string | null
           id: string
           loss_count: number
           name: string
           social_media_url: string
+          spotlight: boolean | null
           updated_at: string
           win_count: number
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          description?: string | null
           id?: string
           loss_count?: number
           name: string
           social_media_url: string
+          spotlight?: boolean | null
           updated_at?: string
           win_count?: number
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
+          description?: string | null
           id?: string
           loss_count?: number
           name?: string
           social_media_url?: string
+          spotlight?: boolean | null
           updated_at?: string
           win_count?: number
         }

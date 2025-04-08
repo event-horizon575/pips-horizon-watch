@@ -7,6 +7,8 @@ export type Influencer = {
   lossCount: number;
   accuracy?: number; // Calculated field
   avatarUrl?: string;
+  description?: string;
+  spotlight?: boolean;
 };
 
 export type PredictionDirection = 'bullish' | 'bearish' | 'neutral';

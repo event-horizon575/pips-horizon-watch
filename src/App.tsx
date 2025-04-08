@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import Index from "./pages/Index";
 import InfluencerDetails from "./pages/InfluencerDetails";
+import Spotlight from "./pages/Spotlight";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/influencer/:id" element={<InfluencerDetails />} />
+            <Route path="/spotlight" element={<Spotlight />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

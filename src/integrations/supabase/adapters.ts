@@ -18,6 +18,8 @@ export function toInfluencer(dbInfluencer: DbInfluencer): Influencer {
     winCount: dbInfluencer.win_count,
     lossCount: dbInfluencer.loss_count,
     avatarUrl: dbInfluencer.avatar_url || undefined,
+    description: dbInfluencer.description || undefined,
+    spotlight: dbInfluencer.spotlight || false,
     // Calculate accuracy as needed
     accuracy: calculateAccuracy(dbInfluencer.win_count, dbInfluencer.loss_count)
   };

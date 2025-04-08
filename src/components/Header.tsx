@@ -32,10 +32,19 @@ const Header = ({ toggleTheme, showThemeToggle = false }: HeaderProps) => {
   return (
     <header className="sticky top-0 z-10 w-full border-b border-border bg-background/80 backdrop-blur-sm">
       <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-6">
           <Link to="/" className="flex items-center gap-2">
             <span className="text-lg font-bold text-primary">Event Horizon</span>
           </Link>
+          
+          <nav className="hidden md:flex items-center gap-4">
+            <Link to="/" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
+              Home
+            </Link>
+            <Link to="/spotlight" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
+              Spotlight
+            </Link>
+          </nav>
         </div>
         
         <div className="flex items-center gap-4">
