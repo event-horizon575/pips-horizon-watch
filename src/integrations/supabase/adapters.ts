@@ -3,8 +3,9 @@ import { Database } from './types';
 import { Influencer, Prediction, PredictionDirection, EventType, ForexPair } from '@/types';
 
 // Type for database tables
-type DbInfluencer = Database['public']['Tables']['influencers']['Row'];
-type DbPrediction = Database['public']['Tables']['predictions']['Row'];
+type Tables = Database['public']['Tables'];
+type DbInfluencer = Tables['influencers']['Row'];
+type DbPrediction = Tables['predictions']['Row'];
 
 /**
  * Convert a database influencer to our application Influencer type
